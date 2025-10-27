@@ -85,7 +85,8 @@ fun TronApp(gameViewModel: GameViewModel = viewModel()) {
         composable(Screen.Game.route) {
             GameScreen(
                 gameState = gameState,
-                onDirectionChange = gameViewModel::changeDirection
+                onDirectionChange = gameViewModel::changeDirection,
+                onRoundEnd = {}
             )
 
             LaunchedEffect(gameState.isRoundOver) {
