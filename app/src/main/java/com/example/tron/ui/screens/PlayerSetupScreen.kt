@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tron.data.GameState
+import com.example.tron.ui.theme.TRONTheme
 
 @Composable
 fun PlayerSetupScreen(
@@ -26,7 +28,10 @@ fun PlayerSetupScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Ingresa tu nombre")
+        Text(
+            text = "Ingresa tu nombre",
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Spacer(modifier = Modifier.height(16.dp))
         TextField(
             value = gameState.player1.name,
@@ -43,9 +48,11 @@ fun PlayerSetupScreen(
 @Preview(showBackground = true)
 @Composable
 fun PlayerSetupScreenPreview() {
-    PlayerSetupScreen(
-        gameState = GameState(player1 = com.example.tron.data.Player(name = "Player 1")),
-        onPlayerNameChange = {},
-        onContinueClick = {}
-    )
+    TRONTheme {
+        PlayerSetupScreen(
+            gameState = GameState(player1 = com.example.tron.data.Player(name = "Player 1")),
+            onPlayerNameChange = {},
+            onContinueClick = {}
+        )
+    }
 }

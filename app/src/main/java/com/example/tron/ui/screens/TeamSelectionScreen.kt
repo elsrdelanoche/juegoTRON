@@ -34,7 +34,12 @@ fun TeamSelectionScreen(onTeamSelected: (PlayerColor) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Elige tu bando", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = "Elige tu bando",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground // Usar color del tema
+        )
         Spacer(modifier = Modifier.height(32.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -51,7 +56,7 @@ fun RowScope.TeamChoice(teamName: String, color: Color, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .height(150.dp)
-            .weight(1f)
+            .weight(1f) // <-- Esto ahora funcionará
             .padding(8.dp)
             .clip(MaterialTheme.shapes.medium)
             .background(color)
@@ -60,7 +65,7 @@ fun RowScope.TeamChoice(teamName: String, color: Color, onClick: () -> Unit) {
     ) {
         Text(
             text = teamName,
-            color = Color.White,
+            color = Color.Black, // Texto negro para mejor contraste en neón
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
@@ -70,5 +75,8 @@ fun RowScope.TeamChoice(teamName: String, color: Color, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun TeamSelectionScreenPreview() {
-    TeamSelectionScreen(onTeamSelected = {})
+    // Envolvemos el Preview en el tema para que se vea correctamente
+    com.example.tron.ui.theme.TRONTheme {
+        TeamSelectionScreen(onTeamSelected = {})
+    }
 }

@@ -34,8 +34,8 @@ enum class Direction {
 
 // Represents the two possible teams/colors
 enum class PlayerColor(val color: Color) {
-    ORANGE(Color(0xFFFFA500)),
-    BLUE(Color(0xFF00BFFF))
+    ORANGE(Color(0xFFFF8C00)), // Naranja Neón (de la especificación)
+    BLUE(Color(0xFF00FFFF))   // Azul Eléctrico (de la especificación)
 }
 
 // Represents a player in the game
@@ -50,6 +50,7 @@ data class Player(
 )
 
 // Represents the game board dimensions
+// 40 de ancho, 20 de alto para landscape (coincide con la spec 20x40)
 data class GameGrid(val width: Int, val height: Int)
 
 // Represents the types of power-ups available
@@ -88,7 +89,8 @@ data class GameState(
     val powerUps: List<PowerUp> = emptyList(),
     val isRoundOver: Boolean = false,
     val roundWinner: Player? = null,
-    val isGameFinished: Boolean = false,
+    // CORRECCIÓN: Renombrado de isGameFinished a isGameOver
+    val isGameOver: Boolean = false,
     val finalWinner: Player? = null,
 
     // Connection Info
