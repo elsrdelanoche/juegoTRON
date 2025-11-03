@@ -2,7 +2,16 @@ package com.example.tron.ui.screens
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,8 +30,7 @@ import com.example.tron.data.*
 @Composable
 fun GameScreen(
     gameState: GameState,
-    onDirectionChange: (Direction) -> Unit,
-    onRoundEnd: () -> Unit
+    onDirectionChange: (Direction) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -33,7 +41,7 @@ fun GameScreen(
     ) {
         GameHeader(gameState)
         GameBoard(gameState)
-        GameControls(onDirectionChange = onDirectionChange, onRoundEnd = onRoundEnd)
+        GameControls(onDirectionChange = onDirectionChange)
     }
 }
 
@@ -50,7 +58,7 @@ private fun GameHeader(gameState: GameState) {
             fontSize = 16.sp
         )
         Text(
-            text = "${gameState.roundTimeLeft}s",
+            text = "Tiempo: ${gameState.roundTimeLeft / 60}:${(gameState.roundTimeLeft % 60).toString().padStart(2, '0')}",
             color = Color.White, 
             fontSize = 20.sp, 
             fontWeight = FontWeight.Bold
@@ -132,7 +140,7 @@ private fun DrawScope.drawPlayer(pos: Position, color: Color, grid: GameGrid) {
 }
 
 @Composable
-private fun GameControls(onDirectionChange: (Direction) -> Unit, onRoundEnd: () -> Unit) {
+private fun GameControls(onDirectionChange: (Direction) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -175,5 +183,5 @@ fun GameScreenPreview() {
             trail = listOf(Position(37, 15), Position(36, 15), Position(35, 15))
         )
     )
-    GameScreen(gameState = previewState, onDirectionChange = {}, onRoundEnd = {})
+    GameScreen(gameState = previewState, onDirectionChange = {})
 }

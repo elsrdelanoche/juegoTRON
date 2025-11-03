@@ -1,6 +1,7 @@
 package com.example.tron
 
 import android.app.Activity
+// import android.media.MediaPlayer // Temporalmente comentado
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,18 +21,30 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tron.data.ConnectionState
 import com.example.tron.navigation.Screen
-import com.example.tron.ui.screens.BluetoothConnectionScreen
-import com.example.tron.ui.screens.GameScreen
-import com.example.tron.ui.screens.PlayerSetupScreen
-import com.example.tron.ui.screens.RoundResultsScreen
-import com.example.tron.ui.screens.TeamSelectionScreen
-import com.example.tron.ui.screens.WinnerScreen
+import com.example.tron.ui.screens.*
 import com.example.tron.ui.theme.TRONTheme
 import com.example.tron.viewmodel.GameViewModel
 
 class MainActivity : ComponentActivity() {
+
+    // private var mediaPlayer: MediaPlayer? = null // Temporalmente comentado
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        /*
+        // TODO: DESCOMENTA ESTE BLOQUE PARA HABILITAR LA MÚSICA DE FONDO
+        // Para que esto funcione, primero debes hacer dos cosas:
+        // 1. Crear un directorio de recursos 'raw': app/src/main/res/raw
+        // 2. Añadir tu archivo de música a ese directorio (ej: app/src/main/res/raw/background_music.mp3)
+        // Una vez hecho, descomenta también la variable 'mediaPlayer' y el código en 'onDestroy()'.
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.background_music).apply {
+            isLooping = true // Para que se repita
+            start()
+        }
+        */
+
         setContent {
             TRONTheme {
                 Surface(
@@ -42,6 +55,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Libera los recursos del MediaPlayer cuando la app se cierra
+        // mediaPlayer?.release() // Temporalmente comentado
+        // mediaPlayer = null // Temporalmente comentado
     }
 }
 
@@ -56,9 +76,23 @@ fun TronApp(gameViewModel: GameViewModel = viewModel()) {
             PlayerSetupScreen(
                 gameState = gameState,
                 onPlayerNameChange = gameViewModel::onPlayerNameChanged,
-                onContinueClick = { navController.navigate(Screen.BluetoothConnection.route) }
+                onContinueClick = { navController.navigate(Screen.GameModeSelection.route) } // Navigate to mode selection
             )
         }
+
+        composable(Screen.GameModeSelection.route) {
+            GameModeSelectionScreen(
+                onVsAiClick = {
+                    gameViewModel.setGameMode(isAi = true)
+                    navController.navigate(Screen.TeamSelection.route)
+                },
+                onVsPlayerClick = {
+                    gameViewModel.setGameMode(isAi = false)
+                    navController.navigate(Screen.BluetoothConnection.route)
+                }
+            )
+        }
+
         composable(Screen.BluetoothConnection.route) {
             BluetoothConnectionScreen(
                 gameState = gameState,
@@ -101,8 +135,8 @@ fun TronApp(gameViewModel: GameViewModel = viewModel()) {
                 onNextRound = gameViewModel::startNewRound
             )
 
-            LaunchedEffect(gameState.isGameOver) {
-                if (gameState.isGameOver) {
+            LaunchedEffect(gameState.isGameFinished) {
+                if (gameState.isGameFinished) {
                     navController.navigate(Screen.FinalWinner.route) {
                         popUpTo(Screen.PlayerSetup.route)
                     }
